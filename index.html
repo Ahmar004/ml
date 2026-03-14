@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ML Resources</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080e1a;
+      --surface: #0f1828;
+      --surface2: #162035;
+      --surface3: #1c2a45;
+      --text: #e8edf5;
+      --text-muted: #8899b4;
+      --text-dim: #556680;
+      --accent: #4fc3f7;
+      --accent2: #f472b6;
+      --accent-warm: #fbbf24;
+      --accent-green: #34d399;
+      --border: rgba(79,195,247,0.12);
+      --border-soft: rgba(255,255,255,0.05);
+      --glow: rgba(79,195,247,0.06);
+      --shadow-sm: 0 4px 16px rgba(0,0,0,0.4);
+      --shadow: 0 16px 48px rgba(0,0,0,0.5);
+      --shadow-lg: 0 32px 80px rgba(0,0,0,0.6);
+      --tier1: #fbbf24;
+      --tier2: #4fc3f7;
+      --tier3: #a78bfa;
+      --tier4: #34d399;
+    }
+    html.light, body.light {
+      --bg: #dde1e7;
+      --surface: #eaecf0;
+      --surface2: #d0d4db;
+      --surface3: #c4c8d0;
+      --text: #1c2128;
+      --text-muted: #444c56;
+      --text-dim: #768390;
+      --accent: #0284c7;
+      --accent2: #db2777;
+      --accent-warm: #d97706;
+      --accent-green: #059669;
+      --border: rgba(2,132,199,0.15);
+      --border-soft: rgba(0,0,0,0.06);
+      --glow: rgba(2,132,199,0.05);
+      --shadow-sm: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow: 0 16px 48px rgba(0,0,0,0.1);
+      --shadow-lg: 0 32px 80px rgba(0,0,0,0.12);
+      --tier1: #d97706;
+      --tier2: #0284c7;
+      --tier3: #7c3aed;
+      --tier4: #059669;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+      transition: background 0.45s ease;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      transition: background 0.45s ease, color 0.45s ease;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* bg layers */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 15% 5%, rgba(79,195,247,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 45% at 85% 95%, rgba(167,139,250,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 35% at 70% 30%, rgba(251,191,36,0.04) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body.light::before {
+      /* solid cream base so no white can show through from UA or grain */
+      background:
+        var(--bg),
+        radial-gradient(ellipse 70% 55% at 15% 5%, rgba(2,132,199,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 45% at 85% 95%, rgba(124,58,237,0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 35% at 70% 30%, rgba(217,119,6,0.03) 0%, transparent 60%);
+    }
+
+    /* grain */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      opacity: 0.018;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* light mode: grain must not wash out cream – multiply so it darkens slightly, never adds white */
+    body.light::after {
+      opacity: 0.04;
+      mix-blend-mode: multiply;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.25rem 6rem;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0 1.25rem;
+      border-bottom: 1px solid var(--border-soft);
+      margin-bottom: 3.5rem;
+      position: sticky;
+      top: 0;
+      background:
+      radial-gradient(ellipse 40% 200% at 0% 50%, rgba(79,195,247,0.07) 0%, transparent 70%),
+      var(--bg);
+      z-index: 100;
+      transition: background 0.45s ease;
+    }
+
+    body.light .topbar {
+    background:
+    radial-gradient(ellipse 40% 200% at 0% 50%, rgba(2,132,199,0.05) 0%, transparent 70%),
+    var(--bg);
+    }
+
+    .topbar::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.3;
+    }
+    .topbar-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+    .topbar-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .topbar-sub {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .community-pills {
+      display: flex;
+      gap: 0.45rem;
+    }
+    .pill {
+      font-size: 0.68rem;
+      font-family: 'Source Serif 4', serif;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      background: var(--surface);
+    }
+    .pill.ofr { border-color: rgba(251,191,36,0.3); color: var(--accent-warm); }
+    .pill.ocr { border-color: rgba(79,195,247,0.3); color: var(--accent); }
+
+    .theme-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 1.05rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
+    }
+    .theme-btn:hover { transform: scale(1.1) rotate(15deg); border-color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 2.5rem 0 3rem;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--glow);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-size: 0.73rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 1.75rem;
+    }
+    .hero-badge::before { content: '✦'; font-size: 0.55rem; }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.1rem;
+    }
+    h1 em { font-style: italic; color: var(--accent); }
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 540px;
+      margin: 0 auto 1rem;
+      font-weight: 300;
+    }
+    .hero-byline {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      margin-bottom: 2.25rem;
+    }
+    .hero-byline strong { color: var(--accent-warm); font-style: normal; font-weight: 600; }
+
+    /* stats row */
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.15s ease both;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--accent);
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-section {
+      margin: 3rem 0 2rem;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+    .filter-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.75rem;
+    }
+    .filter-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.22s ease;
+    }
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active {
+      background: var(--accent);
+      color: #080e1a;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+    body.light .filter-btn.active { color: #fff; }
+    .filter-btn .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.7;
+    }
+
+    /* ── TIER SECTIONS ── */
+    .tier-section {
+      margin-bottom: 3.5rem;
+      animation: fadeUp 0.8s ease both;
+    }
+    .tier-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .tier-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      font-family: 'Playfair Display', serif;
+      font-weight: 800;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .tier-info { flex: 1; }
+    .tier-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.15rem;
+    }
+    .tier-desc {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      letter-spacing: 0.02em;
+    }
+    .tier-count {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* tier color variants */
+    .tier-1 .tier-badge { background: rgba(251,191,36,0.12); color: var(--tier1); border: 1px solid rgba(251,191,36,0.25); }
+    .tier-1 .tier-title { color: var(--tier1); }
+    .tier-2 .tier-badge { background: rgba(79,195,247,0.1); color: var(--tier2); border: 1px solid rgba(79,195,247,0.2); }
+    .tier-2 .tier-title { color: var(--tier2); }
+    .tier-3 .tier-badge { background: rgba(167,139,250,0.1); color: var(--tier3); border: 1px solid rgba(167,139,250,0.2); }
+    .tier-3 .tier-title { color: var(--tier3); }
+    .tier-4 .tier-badge { background: rgba(52,211,153,0.1); color: var(--tier4); border: 1px solid rgba(52,211,153,0.2); }
+    .tier-4 .tier-title { color: var(--tier4); }
+
+    /* ── RESOURCE CARDS ── */
+    .cards-grid {
+      display: grid;
+      gap: 1rem;
+    }
+    .resource-card {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      padding: 1.4rem 1.6rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 1.1rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .resource-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--card-accent, var(--accent));
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      border-radius: 16px 0 0 16px;
+    }
+    .resource-card:hover {
+      border-color: var(--card-accent, var(--accent));
+      transform: translateX(4px);
+      box-shadow: var(--shadow-sm);
+    }
+    .resource-card:hover::before { opacity: 1; }
+    .resource-card.hidden { display: none; }
+
+    .card-icon-wrap {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      transition: background 0.25s ease;
+    }
+    .resource-card:hover .card-icon-wrap {
+      background: color-mix(in srgb, var(--card-accent, var(--accent)) 12%, var(--surface2));
+    }
+
+    .card-body { min-width: 0; }
+    .card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+      letter-spacing: -0.005em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .card-source {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+    }
+    .card-tag {
+      font-size: 0.66rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      background: var(--surface2);
+      color: var(--text-dim);
+    }
+
+    .card-arrow {
+      color: var(--text-dim);
+      font-size: 1rem;
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+    .resource-card:hover .card-arrow {
+      color: var(--card-accent, var(--accent));
+      transform: translateX(3px);
+    }
+
+    /* tier-specific accent overrides */
+    .tier-1 .resource-card { --card-accent: var(--tier1); }
+    .tier-2 .resource-card { --card-accent: var(--tier2); }
+    .tier-3 .resource-card { --card-accent: var(--tier3); }
+    .tier-4 .resource-card { --card-accent: var(--tier4); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border-soft);
+      margin: 3rem 0;
+      position: relative;
+    }
+    .divider::before {
+      content: '✦';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg);
+      padding: 0 0.75rem;
+      color: var(--text-dim);
+      font-size: 0.65rem;
+      transition: background 0.45s ease;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border-soft);
+      animation: fadeUp 0.8s ease both;
+    }
+    .footer-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .footer-sub {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-bottom: 1.75rem;
+      letter-spacing: 0.02em;
+    }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.35rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: var(--surface);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.88rem;
+      transition: all 0.25s ease;
+    }
+    .contact-btn svg { width: 17px; height: 17px; fill: currentColor; flex-shrink: 0; }
+    .contact-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+
+    .footer-note {
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      letter-spacing: 0.03em;
+    }
+    .footer-note span { color: var(--accent-warm); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .tier-section:nth-child(1) { animation-delay: 0.05s; }
+    .tier-section:nth-child(2) { animation-delay: 0.1s; }
+    .tier-section:nth-child(3) { animation-delay: 0.15s; }
+    .tier-section:nth-child(4) { animation-delay: 0.2s; }
+
+    /* card stagger on load */
+    .resource-card:nth-child(1) { animation: fadeUp 0.6s 0.05s ease both; }
+    .resource-card:nth-child(2) { animation: fadeUp 0.6s 0.10s ease both; }
+    .resource-card:nth-child(3) { animation: fadeUp 0.6s 0.15s ease both; }
+    .resource-card:nth-child(4) { animation: fadeUp 0.6s 0.20s ease both; }
+    .resource-card:nth-child(5) { animation: fadeUp 0.6s 0.25s ease both; }
+    .resource-card:nth-child(6) { animation: fadeUp 0.6s 0.30s ease both; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      .community-pills { display: none; }
+      .resource-card { grid-template-columns: auto 1fr auto; padding: 1.1rem 1.2rem; gap: 0.8rem; }
+      .card-name { font-size: 0.92rem; white-space: normal; }
+      .stats-row { gap: 1.5rem; }
+      .topbar { position: relative; }
+    }
+
+    /* scroll reveal for cards added after load */
+    .reveal { opacity: 0; transform: translateY(16px); }
+    .reveal.visible { animation: fadeUp 0.5s ease forwards; }
+  </style>
+</head>
+
+
+<body>
+
+<div class="wrap">
+
+  <!-- TOPBAR -->
+  <nav class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-mid">For OFR & OCR</span>
+    </div>
+    <div class="topbar-right">
+      <div class="community-pills">
+        <span class="pill ofr">OFR · 1600+</span>
+        <span class="pill ocr">OCR · 600+</span>
+      </div>
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1><em>ML & AI</em><br>Learning Resources</h1>
+    <p class="hero-sub">
+      Whether you are just starting out or already have some experience, this page would always provide some sort of help in-sha-Allah!
+    </p>
+    <p class="hero-byline">Compiled by <strong>Ahmar Ali</strong> </p>
+
+    <div class="stats-row">
+      <div class="stat">
+        <span class="stat-num">15+</span>
+        <span class="stat-label">Resources</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Tiers</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">2200+</span>
+        <span class="stat-label">Community Members</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTER BAR -->
+  <div class="filter-section">
+    <div class="filter-label">Filter by tier</div>
+    <div class="filter-row" id="filterRow">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">
+        <span class="dot"></span> All Resources
+      </button>
+      <button class="filter-btn" data-filter="tier-1" onclick="setFilter('tier-1')" style="--dot-color:var(--tier1)">
+        <span class="dot" style="background:var(--tier1)"></span> Tier 1: Gold Standard
+      </button>
+      <button class="filter-btn" data-filter="tier-2" onclick="setFilter('tier-2')">
+        <span class="dot" style="background:var(--tier2)"></span> Tier 2: Specialized
+      </button>
+      <button class="filter-btn" data-filter="tier-3" onclick="setFilter('tier-3')">
+        <span class="dot" style="background:var(--tier3)"></span> Tier 3: Academic
+      </button>
+      <button class="filter-btn" data-filter="tier-4" onclick="setFilter('tier-4')">
+        <span class="dot" style="background:var(--tier4)"></span> Tier 4: Reference
+      </button>
+    </div>
+  </div>
+
+  <!-- TIER 1 -->
+  <section class="tier-section tier-1" data-tier="tier-1">
+    <div class="tier-header">
+      <div class="tier-badge">T1</div>
+      <div class="tier-info">
+        <div class="tier-title">The Gold Standard</div>
+      </div>
+      <span class="tier-count">4 resources</span>
+    </div>
+    <div class="cards-grid">
+      <a href="https://github.com/karpathy/nn-zero-to-hero" target="_blank" class="resource-card" data-tier="tier-1">
+        <div class="card-body">
+          <div class="card-name">Neural Networks: Zero to Hero</div>
+          <div class="card-meta">
+            <span class="card-source">Andrej Karpathy · GitHub</span>
+            <span class="card-tag">Deep Learning</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://course.fast.ai/" target="_blank" class="resource-card" data-tier="tier-1">
+        <div class="card-body">
+          <div class="card-name">Practical Deep Learning for Coders</div>
+          <div class="card-meta">
+            <span class="card-source">Fast.ai · Course</span>
+            <span class="card-tag">Practical</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://www.deeplearning.ai/courses/machine-learning-specialization/" target="_blank" class="resource-card" data-tier="tier-1">
+        <div class="card-body">
+          <div class="card-name">Machine Learning Specialization</div>
+          <div class="card-meta">
+            <span class="card-source">Andrew Ng · DeepLearning.AI</span>
+            <span class="card-tag">Fundamentals</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://github.com/GokuMohandas/Made-With-ML" target="_blank" class="resource-card" data-tier="tier-1">
+        <div class="card-body">
+          <div class="card-name">Made with ML</div>
+          <div class="card-meta">
+            <span class="card-source">Goku Mohandas · GitHub</span>
+            <span class="card-tag">MLOps</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- TIER 2 -->
+  <section class="tier-section tier-2" data-tier="tier-2">
+    <div class="tier-header">
+      <div class="tier-badge">T2</div>
+      <div class="tier-info">
+        <div class="tier-title">Specialized Skills</div>
+      </div>
+      <span class="tier-count">5 resources</span>
+    </div>
+    <div class="cards-grid">
+      <a href="https://huggingface.co/learn/nlp-course/" target="_blank" class="resource-card" data-tier="tier-2">
+        <div class="card-body">
+          <div class="card-name">Hugging Face NLP Course</div>
+          <div class="card-meta">
+            <span class="card-source">Hugging Face · Course</span>
+            <span class="card-tag">NLP</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://github.com/NirDiamant/RAG_Techniques" target="_blank" class="resource-card" data-tier="tier-2">
+        <div class="card-body">
+          <div class="card-name">RAG Techniques</div>
+          <div class="card-meta">
+            <span class="card-source">Nir Diamant · GitHub</span>
+            <span class="card-tag">RAG · LLMs</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://github.com/dair-ai/Prompt-Engineering-Guide" target="_blank" class="resource-card" data-tier="tier-2">
+        <div class="card-body">
+          <div class="card-name">Prompt Engineering Guide</div>
+          <div class="card-meta">
+            <span class="card-source">DAIR.AI · GitHub</span>
+            <span class="card-tag">Prompting</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://github.com/labmlai/annotated_deep_learning_paper_implementations" target="_blank" class="resource-card" data-tier="tier-2">
+        <div class="card-body">
+          <div class="card-name">60+ Deep Learning Paper Implementations</div>
+          <div class="card-meta">
+            <span class="card-source">labmlai · GitHub</span>
+            <span class="card-tag">Papers</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://github.com/NirDiamant/GenAI_Agents" target="_blank" class="resource-card" data-tier="tier-2">
+        <div class="card-body">
+          <div class="card-name">Generative AI Agent Techniques</div>
+          <div class="card-meta">
+            <span class="card-source">Nir Diamant · GitHub</span>
+            <span class="card-tag">Agents · GenAI</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- TIER 3 -->
+  <section class="tier-section tier-3" data-tier="tier-3">
+    <div class="tier-header">
+      <div class="tier-badge">T3</div>
+      <div class="tier-info">
+        <div class="tier-title">Structured Academic Foundations</div>
+      </div>
+      <span class="tier-count">4 resources</span>
+    </div>
+    <div class="cards-grid">
+      <a href="https://github.com/microsoft/ai-agents-for-beginners" target="_blank" class="resource-card" data-tier="tier-3">
+        <div class="card-body">
+          <div class="card-name">AI Agents for Beginners</div>
+          <div class="card-meta">
+            <span class="card-source">Microsoft · GitHub</span>
+            <span class="card-tag">Agents</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://github.com/microsoft/ML-For-Beginners" target="_blank" class="resource-card" data-tier="tier-3">
+        <div class="card-body">
+          <div class="card-name">Machine Learning for Beginners</div>
+          <div class="card-meta">
+            <span class="card-source">Microsoft · GitHub</span>
+            <span class="card-tag">Beginner Friendly</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://github.com/mml-book/mml-book.github.io" target="_blank" class="resource-card" data-tier="tier-3">
+        <div class="card-body">
+          <div class="card-name">Mathematics for Machine Learning</div>
+          <div class="card-meta">
+            <span class="card-source">mml-book · GitHub</span>
+            <span class="card-tag">Math · Theory</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://github.com/HandsOnLLM/Hands-On-Large-Language-Models" target="_blank" class="resource-card" data-tier="tier-3">
+        <div class="card-body">
+          <div class="card-name">Hands-On Large Language Models</div>
+          <div class="card-meta">
+            <span class="card-source">HandsOnLLM · GitHub</span>
+            <span class="card-tag">LLMs</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- TIER 4 -->
+  <section class="tier-section tier-4" data-tier="tier-4">
+    <div class="tier-header">
+      <div class="tier-badge">T4</div>
+      <div class="tier-info">
+        <div class="tier-title">Reference &amp; Exploration</div>
+      </div>
+      <span class="tier-count">6 resources</span>
+    </div>
+    <div class="cards-grid">
+      <a href="https://github.com/academic/awesome-datascience" target="_blank" class="resource-card" data-tier="tier-4">
+        <div class="card-body">
+          <div class="card-name">Data Science: Real World Problems</div>
+          <div class="card-meta">
+            <span class="card-source">NajiElKotob · GitHub</span>
+            <span class="card-tag">Data Science</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://github.com/keon/awesome-nlp" target="_blank" class="resource-card" data-tier="tier-4">
+        <div class="card-body">
+          <div class="card-name">Awesome Natural Language Processing</div>
+          <div class="card-meta">
+            <span class="card-source">keon · GitHub</span>
+            <span class="card-tag">NLP</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://github.com/TheAlgorithms/Python" target="_blank" class="resource-card" data-tier="tier-4">
+        <div class="card-body">
+          <div class="card-name">All Algorithms Implemented in Python</div>
+          <div class="card-meta">
+            <span class="card-source">TheAlgorithms · GitHub</span>
+            <span class="card-tag">Algorithms</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://github.com/aikorea/awesome-rl" target="_blank" class="resource-card" data-tier="tier-4">
+        <div class="card-body">
+          <div class="card-name">Awesome Reinforcement Learning</div>
+          <div class="card-meta">
+            <span class="card-source">aikorea · GitHub</span>
+            <span class="card-tag">RL</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://github.com/Avik-Jain/100-Days-Of-ML-Code" target="_blank" class="resource-card" data-tier="tier-4">
+        <div class="card-body">
+          <div class="card-name">100 Days of ML Coding</div>
+          <div class="card-meta">
+            <span class="card-source">Avik-Jain · GitHub</span>
+            <span class="card-tag">Challenge</span>
+          </div>
+        </div>
+      </a>
+      <a href="https://github.com/FareedKhan-dev/all-rl-algorithms" target="_blank" class="resource-card" data-tier="tier-4">
+        <div class="card-body">
+          <div class="card-name">All RL Algorithms from Scratch</div>
+          <div class="card-meta">
+            <span class="card-source">FareedKhan-dev · GitHub</span>
+            <span class="card-tag">RL · From Scratch</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer>
+    <p class="footer-title">Thank you for visiting!</p>
+    <p class="footer-title"> Please feel free to contribute towards this open-source platform.</p>
+    <p class="footer-note"> Remember, all the legends out there in the field of ML, are people who started and did not stop.</span></p>
+  </br>
+    <p class="footer-sub">This site is created by:</p>
+    <div class="contact-links">
+      <a href="https://github.com/Ahmar004" target="_blank" class="contact-btn">
+        <svg viewBox="0 0 24 24"><path d="M12 .5C5.6.5.5 5.6.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.5-.3-5.2-1.3-5.2-5.7 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 5.4 18.3 5.7 18.3 5.7c.6 1.6.2 2.8.1 3.1.7.9 1.2 1.9 1.2 3.2 0 4.5-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .4.2.7.8.6C20.2 21.4 23.5 17.1 23.5 12 23.5 5.6 18.4.5 12 .5z"/></svg>
+        github.com/Ahmar004
+      </a>
+      <a href="https://linkedin.com/in/ahmarali2004/" target="_blank" class="contact-btn">
+        <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.26 2.36 4.26 5.43v6.31zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.57V9h3.55v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+        LinkedIn
+      </a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // theme toggle - default dark
+  function toggleTheme() {
+    const isLight = document.body.classList.toggle('light');
+    document.documentElement.classList.toggle('light', isLight);
+    document.getElementById('themeBtn').textContent = isLight ? '🌙' : '💡';
+  }
+
+  // filter logic
+  function setFilter(tier) {
+    // update buttons
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.filter === tier);
+    });
+
+    // show/hide sections and cards
+    document.querySelectorAll('.tier-section').forEach(section => {
+      const match = tier === 'all' || section.dataset.tier === tier;
+      section.style.display = match ? '' : 'none';
+    });
+  }
+
+  // scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.resource-card').forEach(card => {
+    observer.observe(card);
+  });
+</script>
+</body>
+</html>
